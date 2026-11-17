@@ -103,13 +103,18 @@
   .filtros{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
   .filtro{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--cinza);padding:9px 20px;font-family:inherit;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s}
   .filtro.ativo,.filtro:hover{background:var(--azul);border-color:var(--azul);color:var(--preto)}
-  .carros{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .carros{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,360px));justify-content:center;gap:24px}
   .carro{background:var(--preto);border:1px solid rgba(255,255,255,.06);overflow:hidden;transition:all .3s}
   .carro:hover{border-color:var(--azul);box-shadow:0 10px 40px rgba(31,143,255,.12)}
   .carro.oculto{display:none}
   .carro-img{height:190px;display:grid;place-items:center;position:relative;background:linear-gradient(160deg,var(--preto-3),var(--preto))}
   .carro-img::after{content:'';position:absolute;bottom:28px;left:15%;right:15%;height:12px;background:radial-gradient(ellipse,rgba(31,143,255,.35),transparent 70%)}
-  .carro-img.com-foto{cursor:pointer;overflow:hidden}
+  .carro-img.com-foto{overflow:hidden}
+  a.carro-img.com-foto{cursor:pointer}
+  a.carro-img{display:grid}
+  .ver-insta{position:absolute;right:12px;bottom:12px;z-index:2;background:rgba(7,8,11,.8);border:1px solid var(--azul);color:var(--branco);font-size:.72rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:6px 10px;opacity:0;transform:translateY(6px);transition:all .25s}
+  .carro:hover .ver-insta{opacity:1;transform:none}
+  @media (hover:none){.ver-insta{opacity:1;transform:none}}
   .carro-img.com-foto::after{display:none}
   .carro-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 62%;transition:transform .5s}
   .carro:hover .carro-img img{transform:scale(1.06)}
@@ -241,6 +246,17 @@
   @keyframes arranque{0%,100%{transform:skewX(-10deg) translateX(0)}50%{transform:skewX(-14deg) translateX(4px)}}
   @media (prefers-reduced-motion:reduce){.vel i,.titulo-vel .eq{animation:none}.vel i{transform:none;opacity:1}}
 
+
+  /* PÚBLICO */
+  .publico{position:relative;overflow:hidden;background:var(--azul);color:var(--preto);padding:46px 0;clip-path:polygon(0 12%,100% 0,100% 88%,0 100%);margin:-30px 0}
+  .pub{position:relative;display:flex;align-items:center;justify-content:center;gap:clamp(14px,3vw,32px);flex-wrap:wrap;text-align:left}
+  .pub-ico{width:clamp(48px,7vw,84px);height:auto}
+  .pub-num{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(5rem,14vw,10rem);line-height:.85;letter-spacing:2px;color:var(--preto);transform:skewX(-8deg)}
+  .pub-txt{display:flex;flex-direction:column;line-height:1.05}
+  .pub-txt strong{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.4rem,6vw,4.4rem);letter-spacing:1px}
+  .pub-txt span{font-weight:700;text-transform:uppercase;letter-spacing:3px;font-size:clamp(.8rem,1.6vw,1.05rem)}
+  @media (max-width:620px){.pub{flex-direction:column;text-align:center;gap:6px}.publico{clip-path:polygon(0 5%,100% 0,100% 95%,0 100%)}}
+
   /* FOOTER */
   footer{border-top:1px solid rgba(31,143,255,.15);padding:50px 0 30px}
   .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
@@ -320,13 +336,12 @@
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats">
-  <div class="wrap">
-    <div class="stat"><b data-n="120">0</b><small>Membros</small></div>
-    <div class="stat"><b data-n="85">0</b><small>Carros na garagem</small></div>
-    <div class="stat"><b data-n="40">0</b><small>Encontros por ano</small></div>
-    <div class="stat"><b data-n="12">0</b><small>Track days</small></div>
+<!-- PÚBLICO -->
+<div class="publico">
+  <div class="wrap pub">
+    <svg class="pub-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14.2c3 .2 5.5 2.6 5.5 5.8"/></svg>
+    <b class="pub-num" data-n="1000">0</b>
+    <div class="pub-txt"><strong>pessoas</strong><span>nos últimos eventos</span></div>
   </div>
 </div>
 
@@ -403,7 +418,7 @@
     <div class="sec-head rev">
       <span class="tag">Garagem</span>
       <h2 class="titulo-vel">Carros da <span class="eq">equipe</span><span class="vel" aria-hidden="true"><i></i><i></i><i></i><i></i></span></h2>
-      <p>Alguns dos carros da equipe FTG.</p>
+      <p>Carros da administração FTG.</p>
     </div>
     <div class="carros" id="carros"></div>
   </div>
@@ -465,12 +480,9 @@
 <script>
   // Garagem — edite esta lista para colocar os carros do grupo
   const CARROS = [
-    {nome:'Golf GTI MK7', dono:'@membro1', cat:'esportivo', cv:'230', ano:'2017', zero:'6,4s', tipo:'hatch'},
     {nome:'Honda New Civic', pessoa:'Aldi', dono:'@civic.black07', cat:'projeto', cv:'—', ano:'—', zero:'—', tipo:'sedan', foto:'img/civic.jpg'},
     {nome:'Chevrolet Corsa', pessoa:'Matheus', dono:'@ocorsica98', cat:'projeto', cv:'—', ano:'—', zero:'—', tipo:'hatch', foto:'img/corsa.jpg', pos:'center 51%'},
-    {nome:'Opala SS', dono:'@membro4', cat:'classico', cv:'171', ano:'1978', zero:'10,5s', tipo:'coupe'},
-    {nome:'Supra MK4', dono:'@membro5', cat:'projeto', cv:'600', ano:'1997', zero:'4,1s', tipo:'coupe'},
-    {nome:'Fusca 1300', dono:'@membro6', cat:'classico', cv:'46', ano:'1975', zero:'—', tipo:'fusca'}
+    {nome:'Subaru Impreza SW', pessoa:'Gil', dono:'@lasanhobilismo', cat:'projeto', cv:'—', ano:'1998', zero:'—', tipo:'hatch', foto:'img/impreza.jpg', pos:'center 70%'}
   ];
   const nomesCat = {esportivo:'Esportivo', projeto:'Projeto', classico:'Clássico'};
 
@@ -494,7 +506,7 @@
   const grid = document.getElementById('carros');
   grid.innerHTML = CARROS.map(c => `
     <div class="carro rev" data-cat="${c.cat}">
-      <div class="carro-img${c.foto ? ' com-foto' : ''}"${c.foto ? ` data-foto="${c.foto}" data-nome="${c.nome}"` : ''}><span class="cat">${c.pessoa || nomesCat[c.cat]}</span>${c.foto ? `<img src="${c.foto}" alt="${c.nome}" loading="lazy"${c.pos ? ` style="object-position:${c.pos}"` : ''}>` : silhueta(c.tipo)}</div>
+      ${c.dono.startsWith('@') ? `<a class="carro-img${c.foto ? ' com-foto' : ''}" href="https://www.instagram.com/${c.dono.slice(1)}" target="_blank" rel="noopener" title="Ver ${c.dono} no Instagram">` : `<div class="carro-img${c.foto ? ' com-foto' : ''}">`}<span class="cat">${c.pessoa || nomesCat[c.cat]}</span>${c.foto ? `<img src="${c.foto}" alt="${c.nome}" loading="lazy"${c.pos ? ` style="object-position:${c.pos}"` : ''}>` : silhueta(c.tipo)}${c.dono.startsWith('@') ? '<span class="ver-insta">Ver no Instagram</span></a>' : '</div>'}
       <div class="carro-info">
         <h3>${c.nome}</h3>
         <div class="dono">${c.dono.startsWith('@') ? `<a href="https://www.instagram.com/${c.dono.slice(1)}" target="_blank" rel="noopener">${c.dono}</a>` : c.dono}</div>
@@ -544,10 +556,6 @@
     const f = FOTOS[el.dataset.i];
     abrir((f.img ? `<img src="${f.img}" alt="${f.titulo}">` : `<div class="ph-grande">${camera}</div>`) +
       `<h3>${f.titulo}</h3><p>${f.tag}</p>`);
-  }));
-
-  document.querySelectorAll('.carro-img.com-foto').forEach(el => el.addEventListener('click', () => {
-    abrir(`<img src="${el.dataset.foto}" alt="${el.dataset.nome}"><h3>${el.dataset.nome}</h3><p>Garagem FTG</p>`);
   }));
 
   // Ingressos — coloque aqui o link da plataforma de venda (Sympla, Even3, etc.)
