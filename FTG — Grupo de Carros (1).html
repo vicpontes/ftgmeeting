@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTG — Grupo de Carros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#00e05a;
+    --verde-escuro:#00a843;
+    --preto:#070907;
+    --preto-2:#0f130f;
+    --preto-3:#161c16;
+    --cinza:#9aa69a;
+    --branco:#f2f5f2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--preto);color:var(--branco);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  h1,h2,h3,.logo{font-family:'Bebas Neue',sans-serif;letter-spacing:1px;font-weight:400}
+
+  /* NAV */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(7,9,7,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(0,224,90,.15)}
+  nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .logo{font-size:2.2rem;display:flex;align-items:center;gap:10px}
+  .logo span{color:var(--verde)}
+  .logo-badge{width:38px;height:38px;border:2px solid var(--verde);transform:skewX(-12deg);display:grid;place-items:center;font-size:1.2rem;color:var(--verde)}
+  .menu{display:flex;gap:32px;list-style:none;font-weight:500;font-size:.95rem}
+  .menu a{position:relative;color:var(--cinza);transition:color .2s}
+  .menu a:hover{color:var(--branco)}
+  .menu a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;background:var(--verde);transition:width .25s}
+  .menu a:hover::after{width:100%}
+  .burger{display:none;background:none;border:0;color:var(--branco);font-size:1.8rem;cursor:pointer}
+
+  /* HERO */
+  .hero{min-height:100vh;display:flex;align-items:center;position:relative;padding-top:70px;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:
+      radial-gradient(ellipse at 75% 55%,rgba(0,224,90,.18),transparent 55%),
+      repeating-linear-gradient(115deg,transparent 0 60px,rgba(0,224,90,.03) 60px 62px)}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center;position:relative}
+  .tag{display:inline-block;border:1px solid var(--verde);color:var(--verde);padding:6px 14px;font-size:.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:22px}
+  .hero h1{font-size:clamp(3.6rem,9vw,7.5rem);line-height:.9;margin-bottom:22px}
+  .hero h1 em{font-style:normal;color:var(--verde);display:block}
+  .hero p{color:var(--cinza);font-size:1.1rem;max-width:480px;margin-bottom:34px}
+  .btns{display:flex;gap:16px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:15px 32px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;font-size:.85rem;transform:skewX(-10deg);transition:all .2s;cursor:pointer;border:0;font-family:inherit}
+  .btn>span{display:inline-block;transform:skewX(10deg)}
+  .btn-verde{background:var(--verde);color:var(--preto)}
+  .btn-verde:hover{background:var(--branco);box-shadow:0 0 30px rgba(0,224,90,.5)}
+  .btn-borda{border:2px solid var(--branco);color:var(--branco);background:transparent}
+  .btn-borda:hover{border-color:var(--verde);color:var(--verde)}
+  .hero-centro{display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;padding:40px 24px}
+  .hero-centro h1{font-size:clamp(2.6rem,6vw,4.4rem)}
+  .hero-centro h1 em{display:inline}
+  .hero-centro p{margin-left:auto;margin-right:auto}
+  .hero-centro .btns{justify-content:center}
+  .logo-grande{position:relative;margin-bottom:38px;display:flex;align-items:center;gap:26px}
+  .lg-box{font-family:'Bebas Neue',sans-serif;font-size:clamp(8rem,24vw,19rem);line-height:.82;padding:.08em .22em .07em;text-align:center;border:6px solid var(--verde);transform:skewX(-12deg);letter-spacing:4px;text-shadow:0 0 40px rgba(0,224,90,.35);box-shadow:0 0 70px rgba(0,224,90,.22),inset 0 0 50px rgba(0,224,90,.08);animation:pulso 3.5s ease-in-out infinite;background:rgba(7,9,7,.6)}
+  .lg-box .g{color:var(--verde)}
+  @keyframes pulso{50%{box-shadow:0 0 110px rgba(0,224,90,.4),inset 0 0 60px rgba(0,224,90,.14)}}
+  .logo-grande .speed-lines{position:static;width:110px}
+  .speed-lines.dir{transform:scaleX(-1)}
+  @media (max-width:620px){.logo-grande .speed-lines{display:none}}
+  .hero-car{width:100%;filter:drop-shadow(0 30px 40px rgba(0,224,90,.25));animation:flutua 4s ease-in-out infinite}
+  @keyframes flutua{50%{transform:translateY(-12px)}}
+  .speed-lines{position:absolute;left:-40px;top:50%;width:120px}
+  .speed-lines i{display:block;height:3px;background:linear-gradient(90deg,transparent,var(--verde));margin:10px 0;border-radius:2px;animation:linha 1.2s linear infinite}
+  .speed-lines i:nth-child(2){width:70%;animation-delay:.3s}
+  .speed-lines i:nth-child(3){width:85%;animation-delay:.6s}
+  @keyframes linha{0%{opacity:0;transform:translateX(40px)}50%{opacity:1}100%{opacity:0;transform:translateX(-40px)}}
+
+  /* STATS */
+  .stats{background:var(--verde);color:var(--preto);padding:34px 0}
+  .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+  .stat b{font-family:'Bebas Neue';font-size:3rem;font-weight:400;display:block;line-height:1}
+  .stat small{font-weight:600;text-transform:uppercase;letter-spacing:1.5px;font-size:.78rem}
+
+  /* SECTIONS */
+  section{padding:110px 0}
+  .sec-head{margin-bottom:56px}
+  .sec-head .tag{margin-bottom:14px}
+  .sec-head h2{font-size:clamp(2.6rem,6vw,4rem);line-height:1}
+  .sec-head h2 span{color:var(--verde)}
+  .sec-head p{color:var(--cinza);max-width:560px;margin-top:12px}
+
+  /* SOBRE */
+  .sobre-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .card{background:var(--preto-2);border:1px solid rgba(255,255,255,.06);padding:36px 30px;position:relative;transition:all .3s;overflow:hidden}
+  .card::before{content:'';position:absolute;top:0;left:0;width:4px;height:0;background:var(--verde);transition:height .35s}
+  .card:hover{transform:translateY(-6px);border-color:rgba(0,224,90,.35)}
+  .card:hover::before{height:100%}
+  .card .ico{width:54px;height:54px;color:var(--verde);margin-bottom:20px}
+  .card h3{font-size:1.8rem;margin-bottom:8px}
+  .card p{color:var(--cinza);font-size:.95rem}
+
+  /* GARAGEM */
+  #fotos,#ingressos{background:var(--preto-2)}
+  .filtros{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
+  .filtro{background:transparent;border:1px solid rgba(255,255,255,.15);color:var(--cinza);padding:9px 20px;font-family:inherit;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s}
+  .filtro.ativo,.filtro:hover{background:var(--verde);border-color:var(--verde);color:var(--preto)}
+  .carros{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .carro{background:var(--preto);border:1px solid rgba(255,255,255,.06);overflow:hidden;transition:all .3s}
+  .carro:hover{border-color:var(--verde);box-shadow:0 10px 40px rgba(0,224,90,.12)}
+  .carro.oculto{display:none}
+  .carro-img{height:190px;display:grid;place-items:center;position:relative;background:linear-gradient(160deg,var(--preto-3),var(--preto))}
+  .carro-img::after{content:'';position:absolute;bottom:28px;left:15%;right:15%;height:12px;background:radial-gradient(ellipse,rgba(0,224,90,.35),transparent 70%)}
+  .carro-img svg{width:80%;position:relative;z-index:1;transition:transform .4s}
+  .carro:hover .carro-img svg{transform:scale(1.06) translateX(6px)}
+  .cat{position:absolute;top:14px;left:14px;background:var(--verde);color:var(--preto);font-size:.7rem;font-weight:700;padding:4px 10px;text-transform:uppercase;letter-spacing:1px;z-index:2}
+  .carro-info{padding:22px 24px}
+  .carro-info h3{font-size:1.7rem;line-height:1.1}
+  .dono{color:var(--cinza);font-size:.85rem;margin-bottom:16px}
+  .specs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid rgba(255,255,255,.08);padding-top:14px;gap:8px}
+  .specs div{font-size:.72rem;color:var(--cinza);text-transform:uppercase;letter-spacing:1px}
+  .specs b{display:block;color:var(--verde);font-size:1rem;letter-spacing:0}
+
+  /* EVENTOS */
+  .eventos{display:flex;flex-direction:column;gap:16px}
+  .evento{display:grid;grid-template-columns:110px 1fr auto;gap:30px;align-items:center;background:var(--preto-2);border:1px solid rgba(255,255,255,.06);padding:24px 30px;transition:all .25s}
+  .evento:hover{border-color:var(--verde);transform:translateX(6px)}
+  .data{text-align:center;border-right:2px solid var(--verde);padding-right:24px}
+  .data b{font-family:'Bebas Neue';font-weight:400;font-size:3rem;line-height:1;display:block;color:var(--verde)}
+  .data small{text-transform:uppercase;font-weight:700;letter-spacing:2px;font-size:.8rem}
+  .evento h3{font-size:1.7rem;line-height:1.1}
+  .evento p{color:var(--cinza);font-size:.9rem}
+  .evento .btn{padding:11px 22px;font-size:.75rem}
+
+  /* JUNTE-SE */
+  #junte{background:linear-gradient(135deg,var(--preto-2),var(--preto));position:relative;overflow:hidden}
+  #junte::before{content:'FTG';position:absolute;right:-40px;bottom:-80px;font-family:'Bebas Neue';font-size:26rem;color:rgba(0,224,90,.04);line-height:1;pointer-events:none}
+  .junte-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;position:relative}
+  .lista{list-style:none;margin-top:26px}
+  .lista li{padding:10px 0 10px 34px;position:relative;color:var(--cinza)}
+  .lista li::before{content:'';position:absolute;left:0;top:16px;width:18px;height:10px;border-left:3px solid var(--verde);border-bottom:3px solid var(--verde);transform:rotate(-45deg)}
+  form{background:var(--preto);border:1px solid rgba(0,224,90,.25);padding:38px}
+  .campo{margin-bottom:18px}
+  label{display:block;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--cinza);margin-bottom:8px}
+  input,select,textarea{width:100%;background:var(--preto-2);border:1px solid rgba(255,255,255,.1);color:var(--branco);padding:13px 15px;font-family:inherit;font-size:.95rem;outline:none;transition:border .2s}
+  input:focus,select:focus,textarea:focus{border-color:var(--verde)}
+  textarea{resize:vertical;min-height:90px}
+  .dupla{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  form .btn{width:100%;margin-top:6px}
+  .ok{display:none;text-align:center;padding:30px 10px}
+  .ok h3{font-size:2.4rem;color:var(--verde)}
+  .ok p{color:var(--cinza)}
+
+
+  /* GALERIA */
+  .galeria{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px}
+  .foto{position:relative;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.06);background:var(--preto-3)}
+  .foto.grande{grid-column:span 2;grid-row:span 2}
+  .foto.larga{grid-column:span 2}
+  .foto .ph{position:absolute;inset:0;display:grid;place-items:center;transition:transform .5s}
+  .foto .ph svg{width:46px;height:46px;color:rgba(0,224,90,.45)}
+  .foto:hover .ph{transform:scale(1.07)}
+  .foto img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+  .foto:hover img{transform:scale(1.07)}
+  .foto figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 16px 14px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-weight:600;font-size:.9rem;transform:translateY(100%);transition:transform .3s}
+  .foto figcaption small{display:block;color:var(--verde);font-size:.72rem;text-transform:uppercase;letter-spacing:1.5px}
+  .foto:hover figcaption{transform:none}
+  .foto::after{content:'';position:absolute;inset:0;border:2px solid var(--verde);opacity:0;transition:opacity .3s;pointer-events:none}
+  .foto:hover::after{opacity:1}
+
+  /* INGRESSOS */
+  .planos{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
+  .plano{background:var(--preto);border:1px solid rgba(255,255,255,.08);padding:40px 32px;display:flex;flex-direction:column;position:relative;transition:transform .3s}
+  .plano:hover{transform:translateY(-6px)}
+  .plano.destaque{border:2px solid var(--verde);box-shadow:0 0 50px rgba(0,224,90,.15)}
+  .selo{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--verde);color:var(--preto);font-size:.72rem;font-weight:700;padding:5px 14px;text-transform:uppercase;letter-spacing:1.5px;white-space:nowrap}
+  .plano h3{font-size:2rem}
+  .preco{font-family:'Bebas Neue';font-size:4.2rem;line-height:1;color:var(--verde);margin:6px 0 10px}
+  .preco small{font-size:1.6rem;margin-right:4px;color:var(--branco)}
+  .plano .lista{margin:0 0 28px;flex:1}
+  .plano .btn{width:100%;text-align:center}
+
+  /* MODAL */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;place-items:center;padding:20px}
+  .modal.aberto{display:grid}
+  .modal-box{background:var(--preto-2);border:1px solid var(--verde);max-width:760px;width:100%;padding:36px;position:relative;text-align:center}
+  .modal-box h3{font-size:2.2rem;color:var(--verde)}
+  .modal-box p{color:var(--cinza)}
+  .modal-box .ph-grande{height:min(60vh,420px);display:grid;place-items:center;background:var(--preto-3);margin-bottom:16px}
+  .modal-box .ph-grande svg{width:70px;color:rgba(0,224,90,.45)}
+  .modal-box img{max-width:100%;max-height:70vh;margin-bottom:16px}
+  .fechar{position:absolute;top:8px;right:14px;background:none;border:0;color:var(--branco);font-size:2rem;cursor:pointer}
+  @media (max-width:900px){.galeria{grid-template-columns:repeat(2,1fr)}.planos{grid-template-columns:1fr;max-width:440px;margin:0 auto}}
+  @media (max-width:620px){.galeria{grid-auto-rows:150px}}
+
+
+  /* MENU LATERAL */
+  .nav-esq{display:flex;align-items:center;gap:18px}
+  .btn-mini{padding:10px 22px;font-size:.75rem}
+  .burger{display:flex;flex-direction:column;justify-content:center;gap:6px;width:46px;height:46px;background:none;border:1px solid rgba(255,255,255,.15);cursor:pointer;padding:0 11px;transition:border-color .2s}
+  .burger i{display:block;height:2px;background:var(--branco);transition:all .25s}
+  .burger i:nth-child(2){width:70%;background:var(--verde)}
+  .burger:hover{border-color:var(--verde)}
+  .burger:hover i:nth-child(2){width:100%}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);z-index:90;opacity:0;pointer-events:none;transition:opacity .3s}
+  .overlay.aberto{opacity:1;pointer-events:auto}
+  .gaveta{position:fixed;top:0;left:0;bottom:0;width:min(360px,86vw);background:var(--preto-2);border-right:2px solid var(--verde);z-index:95;transform:translateX(-100%);transition:transform .35s cubic-bezier(.7,0,.2,1);display:flex;flex-direction:column;padding:24px 30px 30px}
+  .gaveta.aberta{transform:none;box-shadow:20px 0 60px rgba(0,224,90,.12)}
+  .gaveta-topo{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .fechar-g{background:none;border:0;color:var(--branco);font-size:2.4rem;line-height:1;cursor:pointer;transition:color .2s}
+  .fechar-g:hover{color:var(--verde)}
+  .gaveta .menu{display:block;list-style:none;margin:24px 0;flex:1;overflow-y:auto}
+  .gaveta .menu a::after{display:none}
+  .gaveta .menu a{display:flex;align-items:baseline;gap:16px;padding:13px 0;font-family:'Bebas Neue',sans-serif;font-size:2.1rem;letter-spacing:1px;color:var(--branco);border-bottom:1px solid rgba(255,255,255,.05);transition:all .25s}
+  .gaveta .menu a small{font-family:'Inter',sans-serif;font-size:.75rem;color:var(--verde);font-weight:600}
+  .gaveta .menu a:hover{color:var(--verde);padding-left:10px}
+  .gaveta .menu li{opacity:0;transform:translateX(-30px);transition:all .4s}
+  .gaveta.aberta .menu li{opacity:1;transform:none}
+  .gaveta.aberta .menu li:nth-child(2){transition-delay:.05s}.gaveta.aberta .menu li:nth-child(3){transition-delay:.1s}
+  .gaveta.aberta .menu li:nth-child(4){transition-delay:.15s}.gaveta.aberta .menu li:nth-child(5){transition-delay:.2s}
+  .gaveta.aberta .menu li:nth-child(6){transition-delay:.25s}
+  .gaveta-rodape p{text-align:center;color:var(--cinza);font-size:.75rem;letter-spacing:3px;text-transform:uppercase;margin-top:16px}
+  .lg-sub{font-size:clamp(.7rem,1.7vw,1.3rem);line-height:1;letter-spacing:.45em;padding-left:.45em;color:var(--verde);text-shadow:none;margin-top:.5em;white-space:nowrap}
+  @media (max-width:620px){.lg-box{font-size:27vw;border-width:4px}.btn-mini{padding:9px 14px;font-size:.68rem}.lg-sub{letter-spacing:.25em;padding-left:.25em}}
+
+  /* FOOTER */
+  footer{border-top:1px solid rgba(0,224,90,.15);padding:50px 0 30px}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  .redes{display:flex;gap:12px}
+  .redes a{width:42px;height:42px;border:1px solid rgba(255,255,255,.15);display:grid;place-items:center;transition:all .2s}
+  .redes a:hover{background:var(--verde);border-color:var(--verde);color:var(--preto)}
+  .redes svg{width:18px;height:18px}
+  .copy{text-align:center;color:#5d675d;font-size:.82rem;margin-top:34px}
+
+  /* reveal */
+  .rev{opacity:0;transform:translateY(30px);transition:all .7s ease}
+  .rev.vis{opacity:1;transform:none}
+
+  @media (max-width:900px){
+    .hero-grid,.junte-grid{grid-template-columns:1fr}
+    .hero-car-box{order:-1;max-width:460px;margin:0 auto}
+    .sobre-grid,.carros{grid-template-columns:1fr 1fr}
+    .stats .wrap{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:620px){
+    section{padding:80px 0}
+    .sobre-grid,.carros{grid-template-columns:1fr}
+    .evento{grid-template-columns:1fr;gap:14px;text-align:left}
+    .data{border-right:0;border-bottom:2px solid var(--verde);padding:0 0 10px;text-align:left;display:flex;gap:10px;align-items:baseline}
+    .dupla{grid-template-columns:1fr}
+    form{padding:26px}
+  }
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+<aside class="gaveta" id="gaveta" aria-hidden="true">
+  <div class="gaveta-topo">
+    <span class="logo">F<span>T</span>G</span>
+    <button class="fechar-g" id="fecharG" aria-label="Fechar menu">×</button>
+  </div>
+  <ul class="menu" id="menu">
+    <li><a href="#inicio"><small>01</small>Início</a></li>
+    <li><a href="#sobre"><small>02</small>A equipe</a></li>
+    <li><a href="#eventos"><small>03</small>Eventos</a></li>
+    <li><a href="#fotos"><small>04</small>Fotos</a></li>
+    <li><a href="#garagem"><small>05</small>Garagem</a></li>
+    <li><a href="#ingressos"><small>06</small>Ingressos</a></li>
+  </ul>
+  <div class="gaveta-rodape">
+    <a href="#ingressos" class="btn btn-verde" style="width:100%;text-align:center"><span>Comprar ingresso</span></a>
+    <p>Anti Greta Racing Club</p>
+  </div>
+</aside>
+
+<header>
+  <nav class="wrap">
+    <div class="nav-esq">
+      <button class="burger" id="burger" aria-label="Abrir menu"><i></i><i></i><i></i></button>
+      <a href="#inicio" class="logo">F<span>T</span>G</a>
+    </div>
+    <a href="#ingressos" class="btn btn-verde btn-mini"><span>Ingressos</span></a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <div class="wrap hero-centro">
+    <div class="logo-grande">
+      <div class="speed-lines"><i></i><i></i><i></i></div>
+      <div class="lg-box"><div class="lg-letras">F<span class="g">T</span>G</div><div class="lg-sub">Anti Greta Racing Club</div></div>
+      <div class="speed-lines dir"><i></i><i></i><i></i></div>
+    </div>
+    <h1>Paixão sobre <em>quatro rodas</em></h1>
+    <p>Conheça a equipe FTG, fique por dentro dos nossos eventos e veja as melhores fotos dos encontros.</p>
+    <div class="btns">
+      <a href="#ingressos" class="btn btn-verde"><span>Comprar ingresso</span></a>
+      <a href="#eventos" class="btn btn-borda"><span>Ver eventos</span></a>
+      <a href="https://instagram.com/ftgmeeting" target="_blank" rel="noopener" class="btn btn-borda"><span>Redes sociais</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="wrap">
+    <div class="stat"><b data-n="120">0</b><small>Membros</small></div>
+    <div class="stat"><b data-n="85">0</b><small>Carros na garagem</small></div>
+    <div class="stat"><b data-n="40">0</b><small>Encontros por ano</small></div>
+    <div class="stat"><b data-n="12">0</b><small>Track days</small></div>
+  </div>
+</div>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div class="wrap">
+    <div class="sec-head rev">
+      <span class="tag">Quem somos</span>
+      <h2>Mais que uma equipe, <span>uma família</span></h2>
+      <p>Nascemos da vontade de juntar amigos apaixonados por carros. Hoje a FTG é ponto de encontro para quem curte originais, projetos, esportivos e clássicos.</p>
+    </div>
+    <div class="sobre-grid">
+      <div class="card rev">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>
+        <h3>Encontros</h3>
+        <p>Reuniões mensais para mostrar os carros, trocar ideia e fortalecer a amizade entre os membros.</p>
+      </div>
+      <div class="card rev">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V4h13l-2 4 2 4H4"/></svg>
+        <h3>Track Days</h3>
+        <p>Dias de pista em autódromos, com segurança, para acelerar de verdade e evoluir na pilotagem.</p>
+      </div>
+      <div class="card rev">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>
+        <h3>Projetos</h3>
+        <p>Dicas de preparação, estética e mecânica. Aqui todo mundo ajuda a tirar o projeto do papel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTOS -->
+<section id="eventos">
+  <div class="wrap">
+    <div class="sec-head rev">
+      <span class="tag">Agenda</span>
+      <h2>Próximos <span>eventos</span></h2>
+    </div>
+    <div class="eventos">
+      <div class="evento rev">
+        <div class="data"><b>06</b><small>Dez</small></div>
+        <div><h3>Encontro mensal FTG</h3><p>Sábado, a partir das 19h · Local divulgado no grupo</p></div>
+        <a href="#ingressos" class="btn btn-verde"><span>Comprar ingresso</span></a>
+      </div>
+      <div class="evento rev">
+        <div class="data"><b>14</b><small>Dez</small></div>
+        <div><h3>Rolê de fim de ano</h3><p>Domingo, saída às 8h · Serra com parada para café</p></div>
+        <a href="#ingressos" class="btn btn-verde"><span>Comprar ingresso</span></a>
+      </div>
+      <div class="evento rev">
+        <div class="data"><b>24</b><small>Jan</small></div>
+        <div><h3>Track Day FTG</h3><p>Sábado, dia inteiro · Vagas limitadas</p></div>
+        <a href="#ingressos" class="btn btn-verde"><span>Comprar ingresso</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOTOS -->
+<section id="fotos">
+  <div class="wrap">
+    <div class="sec-head rev">
+      <span class="tag">Galeria</span>
+      <h2>Fotos <span>da FTG</span></h2>
+      <p>Os melhores momentos dos nossos encontros, rolês e track days.</p>
+    </div>
+    <div class="galeria" id="galeria"></div>
+  </div>
+</section>
+
+<!-- GARAGEM -->
+<section id="garagem">
+  <div class="wrap">
+    <div class="sec-head rev">
+      <span class="tag">Garagem</span>
+      <h2>As máquinas <span>da equipe</span></h2>
+      <p>Alguns dos carros da equipe FTG. Clique nos filtros para ver por categoria.</p>
+    </div>
+    <div class="filtros">
+      <button class="filtro ativo" data-f="todos">Todos</button>
+      <button class="filtro" data-f="esportivo">Esportivos</button>
+      <button class="filtro" data-f="projeto">Projetos</button>
+      <button class="filtro" data-f="classico">Clássicos</button>
+    </div>
+    <div class="carros" id="carros"></div>
+  </div>
+</section>
+
+<!-- INGRESSOS -->
+<section id="ingressos">
+  <div class="wrap">
+    <div class="sec-head rev" style="text-align:center">
+      <span class="tag">Ingressos</span>
+      <h2>Garanta seu lugar <span>no próximo evento</span></h2>
+      <p style="margin-left:auto;margin-right:auto">Encontro FTG · 06 de dezembro · Vagas limitadas</p>
+    </div>
+    <div class="planos">
+      <div class="plano rev">
+        <h3>Visitante</h3>
+        <div class="preco"><small>R$</small>20</div>
+        <ul class="lista"><li>Acesso ao evento</li><li>Área de exposição</li><li>Sorteios da noite</li></ul>
+        <button class="btn btn-borda comprar" data-p="Visitante"><span>Comprar ingresso</span></button>
+      </div>
+      <div class="plano destaque rev">
+        <span class="selo">Mais vendido</span>
+        <h3>Expositor</h3>
+        <div class="preco"><small>R$</small>50</div>
+        <ul class="lista"><li>Entrada com seu carro</li><li>Vaga na área de exposição</li><li>Adesivo oficial FTG</li><li>Acesso para 1 acompanhante</li></ul>
+        <button class="btn btn-verde comprar" data-p="Expositor"><span>Comprar ingresso</span></button>
+      </div>
+      <div class="plano rev">
+        <h3>VIP</h3>
+        <div class="preco"><small>R$</small>90</div>
+        <ul class="lista"><li>Tudo do Expositor</li><li>Camiseta exclusiva FTG</li><li>Área VIP</li></ul>
+        <button class="btn btn-borda comprar" data-p="VIP"><span>Comprar ingresso</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="fechar" id="fechar" aria-label="Fechar">×</button>
+    <div id="modal-conteudo"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a href="#inicio" class="logo">F<span>T</span>G</a>
+      <div class="redes">
+        <a href="https://instagram.com/ftgmeeting" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="https://youtube.com" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg></a>
+        <a href="https://tiktok.com" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v11a4 4 0 1 1-4-4"/><path d="M14 3c0 3 2 5 5 5"/></svg></a>
+      </div>
+    </div>
+    <p class="copy">© <span id="ano"></span> FTG · Todos os direitos reservados</p>
+  </div>
+</footer>
+
+<script>
+  // Garagem — edite esta lista para colocar os carros do grupo
+  const CARROS = [
+    {nome:'Golf GTI MK7', dono:'@membro1', cat:'esportivo', cv:'230', ano:'2017', zero:'6,4s', tipo:'hatch'},
+    {nome:'Civic Si', dono:'@membro2', cat:'esportivo', cv:'208', ano:'2019', zero:'7,0s', tipo:'sedan'},
+    {nome:'Gol G3 Turbo', dono:'@membro3', cat:'projeto', cv:'320', ano:'2004', zero:'5,8s', tipo:'hatch'},
+    {nome:'Opala SS', dono:'@membro4', cat:'classico', cv:'171', ano:'1978', zero:'10,5s', tipo:'coupe'},
+    {nome:'Supra MK4', dono:'@membro5', cat:'projeto', cv:'600', ano:'1997', zero:'4,1s', tipo:'coupe'},
+    {nome:'Fusca 1300', dono:'@membro6', cat:'classico', cv:'46', ano:'1975', zero:'—', tipo:'fusca'}
+  ];
+  const nomesCat = {esportivo:'Esportivo', projeto:'Projeto', classico:'Clássico'};
+
+  function silhueta(tipo){
+    const corpos = {
+      hatch:'M20 80 Q20 64 40 60 L80 52 Q105 30 150 28 L200 30 Q215 32 225 55 L240 62 Q252 66 250 80 L248 88 L22 88Z',
+      sedan:'M14 80 Q14 66 34 62 L82 54 Q110 32 150 32 Q195 32 215 54 L250 60 Q262 64 262 78 L260 88 L16 88Z',
+      coupe:'M14 82 Q12 68 34 64 L95 54 Q125 36 165 36 Q200 38 222 56 L254 62 Q266 66 264 80 L262 88 L16 88Z',
+      fusca:'M24 84 Q20 60 50 52 Q80 22 140 22 Q200 22 228 54 Q256 62 252 84 L250 88 L26 88Z'
+    };
+    return `<svg viewBox="0 0 276 112" xmlns="http://www.w3.org/2000/svg">
+      <path d="${corpos[tipo]}" fill="#121812" stroke="#00e05a" stroke-width="2.2"/>
+      <path d="M30 72 L246 72" stroke="#00e05a" stroke-width="1.5" opacity=".6"/>
+      <circle cx="70" cy="88" r="20" fill="#050705" stroke="#00e05a" stroke-width="2.5"/>
+      <circle cx="70" cy="88" r="5" fill="#00e05a"/>
+      <circle cx="208" cy="88" r="20" fill="#050705" stroke="#00e05a" stroke-width="2.5"/>
+      <circle cx="208" cy="88" r="5" fill="#00e05a"/>
+    </svg>`;
+  }
+
+  const grid = document.getElementById('carros');
+  grid.innerHTML = CARROS.map(c => `
+    <div class="carro rev" data-cat="${c.cat}">
+      <div class="carro-img"><span class="cat">${nomesCat[c.cat]}</span>${silhueta(c.tipo)}</div>
+      <div class="carro-info">
+        <h3>${c.nome}</h3>
+        <div class="dono">${c.dono}</div>
+        <div class="specs">
+          <div><b>${c.cv}</b>cv</div>
+          <div><b>${c.ano}</b>ano</div>
+          <div><b>${c.zero}</b>0-100</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // Filtros
+  document.querySelectorAll('.filtro').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.filtro').forEach(x => x.classList.remove('ativo'));
+    b.classList.add('ativo');
+    const f = b.dataset.f;
+    document.querySelectorAll('.carro').forEach(c => {
+      c.classList.toggle('oculto', f !== 'todos' && c.dataset.cat !== f);
+    });
+  }));
+
+  // Menu mobile
+  const gaveta = document.getElementById('gaveta'), overlay = document.getElementById('overlay');
+  function menuAberto(v){ gaveta.classList.toggle('aberta', v); overlay.classList.toggle('aberto', v); gaveta.setAttribute('aria-hidden', !v); document.body.style.overflow = v ? 'hidden' : ''; }
+  document.getElementById('burger').addEventListener('click', () => menuAberto(true));
+  document.getElementById('fecharG').addEventListener('click', () => menuAberto(false));
+  overlay.addEventListener('click', () => menuAberto(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') menuAberto(false); });
+  gaveta.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menuAberto(false)));
+
+  // Galeria — troque "img" pelo endereço/arquivo da foto quando tiver as fotos
+  const FOTOS = [
+    {titulo:'Encontro de novembro', tag:'Encontro', tam:'grande', img:''},
+    {titulo:'Track day no autódromo', tag:'Track day', tam:'', img:''},
+    {titulo:'Rolê na serra', tag:'Rolê', tam:'', img:''},
+    {titulo:'Garagem da equipe', tag:'Equipe', tam:'larga', img:''},
+    {titulo:'Exposição de projetos', tag:'Encontro', tam:'', img:''},
+    {titulo:'Largada no track day', tag:'Track day', tam:'', img:''},
+    {titulo:'Foto oficial da equipe', tag:'Equipe', tam:'larga', img:''}
+  ];
+  const camera = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg>';
+  const tons = ['#0d1a10','#101a14','#0a140c','#13201a'];
+  document.getElementById('galeria').innerHTML = FOTOS.map((f,i) => `
+    <figure class="foto rev ${f.tam}" data-i="${i}">
+      ${f.img ? `<img src="${f.img}" alt="${f.titulo}">` :
+        `<div class="ph" style="background:linear-gradient(135deg,${tons[i%4]},#050705)">${camera}</div>`}
+      <figcaption><small>${f.tag}</small>${f.titulo}</figcaption>
+    </figure>`).join('');
+
+  // Modal
+  const modal = document.getElementById('modal'), conteudo = document.getElementById('modal-conteudo');
+  function abrir(html){ conteudo.innerHTML = html; modal.classList.add('aberto'); }
+  document.getElementById('fechar').addEventListener('click', () => modal.classList.remove('aberto'));
+  modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('aberto'); });
+  document.querySelectorAll('.foto').forEach(el => el.addEventListener('click', () => {
+    const f = FOTOS[el.dataset.i];
+    abrir((f.img ? `<img src="${f.img}" alt="${f.titulo}">` : `<div class="ph-grande">${camera}</div>`) +
+      `<h3>${f.titulo}</h3><p>${f.tag}</p>`);
+  }));
+
+  // Ingressos — coloque aqui o link da plataforma de venda (Sympla, Even3, etc.)
+  const LINK_INGRESSOS = '';
+  document.querySelectorAll('.comprar').forEach(b => b.addEventListener('click', () => {
+    if (LINK_INGRESSOS) { window.location.href = LINK_INGRESSOS; return; }
+    abrir(`<h3>Ingresso ${b.dataset.p}</h3><p>As vendas abrem em breve! Acompanhe a FTG nas redes sociais para não perder.</p>`);
+  }));
+
+  // Animação ao rolar
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (en.isIntersecting){ en.target.classList.add('vis'); io.unobserve(en.target); }
+  }), {threshold:.12});
+  document.querySelectorAll('.rev').forEach(el => io.observe(el));
+
+  // Contadores
+  const cio = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return;
+    const el = en.target, alvo = +el.dataset.n; let n = 0;
+    const passo = Math.max(1, Math.ceil(alvo/40));
+    const t = setInterval(() => { n = Math.min(alvo, n + passo); el.textContent = n + (n===alvo?'+':''); if(n===alvo) clearInterval(t); }, 30);
+    cio.unobserve(el);
+  }), {threshold:.5});
+  document.querySelectorAll('[data-n]').forEach(el => cio.observe(el));
+
+  document.getElementById('ano').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
